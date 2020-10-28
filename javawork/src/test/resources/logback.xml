@@ -1,0 +1,16 @@
+<configuration debug="false" scan="false" scanPeriod="30 seconds">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern-->
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n%ex{full}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.apache.kafka.clients" level="WARN" />
+    <logger name="org.apache.flink.shaded.netty4" level="INFO" />
+    <logger name="org.apache.flink" level="INFO" />
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
