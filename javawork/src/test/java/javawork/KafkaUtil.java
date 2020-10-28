@@ -3,16 +3,20 @@ package javawork;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.TopicListing;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.javatuples.Pair;
 import org.junit.Test;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class KafkaUtil {
 
@@ -75,19 +79,41 @@ public class KafkaUtil {
     }
 
     public List<String> listTopics() throws Exception {
-        // TODO
-        return null;
+        AdminClient client = AdminClient.create(adminClientProps());
+        Collection<TopicListing> ls = client.listTopics().listings().get();
+        return ls.stream()
+                .map(i -> i.name())
+                .filter(i -> !i.startsWith("__"))
+                .collect(Collectors.toList());
     }
 
 
-    public static <T,R> List<Pair<T,R>> consumeN(String topicName, int records) {
-        // TODO
-        return null;
+    public static <K,V> List<Pair<K,V>> consumeN(
+            Consumer<K,V> consumer, int records) {
+        ArrayList<Pair<K,V>> buffer = new ArrayList<>();
+        int count = 0;
+        while (true) {
+            ConsumerRecords<K,V> rs =  consumer.poll(testTimeout);
+            for (ConsumerRecord<K,V> r : rs) {
+                buffer.add(Pair.with(r.key(), r.value()));
+                count+=1;
+                if (count >= records) return buffer;
+            }
+        }
     }
 
-    public static <T,R> List<Pair<T,R>> consumeFor(String topicName, Duration duration) {
-        // TODO
-        return null;
+    public static <K,V> List<Pair<K,V>> consumeFor(
+            Consumer<K,V> consumer, Duration duration) {
+        long start = System.currentTimeMillis();
+        long expectedEnd = start + duration.toMillis();
+        ArrayList<Pair<K,V>> buffer = new ArrayList<>();
+        while(true) {
+            ConsumerRecords<K,V> rs = consumer.poll(testTimeout);
+            for(ConsumerRecord<K,V> r : rs) {
+                buffer.add(Pair.with(r.key(), r.value()));
+            }
+            if (System.currentTimeMillis() >= expectedEnd) return buffer;
+        }
     }
 
 }
