@@ -52,7 +52,7 @@ public class KafkaUtil {
     }
 
     public static void consumeN(String topicName, int records) {
-        
+
     }
 
 }
