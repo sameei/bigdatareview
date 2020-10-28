@@ -24,7 +24,6 @@ public class KafkaUtil {
     public static final String kafkaServers = "127.0.0.1:9092";
     public static final String testTopic = "testTopic-01";
 
-
     public static Properties producerProps() {
         Properties props = new Properties();
         props.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServers);
@@ -71,19 +70,18 @@ public class KafkaUtil {
 
     @Test
     public void printTopics() throws Exception {
-        AdminClient client = AdminClient.create(adminClientProps());
-        Collection<TopicListing> ls = client.listTopics().listings().get();
-        ls.forEach(i -> {
-            System.out.printf("%s\t%s\n", i.name(), i.isInternal());
+        listTopics().forEach(i -> {
+            System.out.printf("%s\n", i);
         });
     }
 
-    public List<String> listTopics() throws Exception {
+    public static List<String> listTopics() throws Exception {
         AdminClient client = AdminClient.create(adminClientProps());
         Collection<TopicListing> ls = client.listTopics().listings().get();
         return ls.stream()
                 .map(i -> i.name())
                 .filter(i -> !i.startsWith("__"))
+                .filter(i -> !i.startsWith("_"))
                 .collect(Collectors.toList());
     }
 
