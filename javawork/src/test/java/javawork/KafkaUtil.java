@@ -1,9 +1,17 @@
 package javawork;
 
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.TopicListing;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.javatuples.Pair;
+import org.junit.Test;
 
 import java.time.Duration;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 public class KafkaUtil {
@@ -51,8 +59,35 @@ public class KafkaUtil {
         return props;
     }
 
-    public static void consumeN(String topicName, int records) {
+    public static Properties adminClientProps() {
+        Properties props = new Properties();
+        props.setProperty(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServers);
+        return props;
+    }
 
+    @Test
+    public void printTopics() throws Exception {
+        AdminClient client = AdminClient.create(adminClientProps());
+        Collection<TopicListing> ls = client.listTopics().listings().get();
+        ls.forEach(i -> {
+            System.out.printf("%s\t%s\n", i.name(), i.isInternal());
+        });
+    }
+
+    public List<String> listTopics() throws Exception {
+        // TODO
+        return null;
+    }
+
+
+    public static <T,R> List<Pair<T,R>> consumeN(String topicName, int records) {
+        // TODO
+        return null;
+    }
+
+    public static <T,R> List<Pair<T,R>> consumeFor(String topicName, Duration duration) {
+        // TODO
+        return null;
     }
 
 }
