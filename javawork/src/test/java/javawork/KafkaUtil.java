@@ -53,6 +53,7 @@ public class KafkaUtil {
 
     public static Properties consumerPropsStringString(String groupId) {
         Properties props = new Properties();
+        props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.setProperty(
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 "org.apache.kafka.common.serialization.StringDeserializer");

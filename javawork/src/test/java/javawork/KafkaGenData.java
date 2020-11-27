@@ -9,6 +9,7 @@ public class KafkaGenData {
     @Test
     public void produceNames() throws Exception {
 
+
         KafkaProducer<String, String> producer =
                 new KafkaProducer<>(KafkaUtil.producerPropsForStringString());
 
@@ -17,5 +18,7 @@ public class KafkaGenData {
         producer.send(new ProducerRecord<>(KafkaUtil.testTopic, "?", "Ali")).get();
         producer.send(new ProducerRecord<>(KafkaUtil.testTopic, "?", "Majid")).get();
     }
+
+    public void consumeNames() throws Exception {}
 
 }
