@@ -1,0 +1,18 @@
+<configuration>
+
+    <logger name="org.sparkproject.jetty" level="WARN"/>
+    <logger name="org.apache.spark" level="WARN"/>
+    <logger name="org.apache.kafka" level="WARN"/>
+
+    <logger name="xyz.sigmalab" level="DEBUG" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n%ex{full}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
